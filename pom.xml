@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>bmc.dev.templates.maven</groupId>
+        <artifactId>bmc-parent</artifactId>
+        <version>90a7f31</version>
+    </parent>
+
+    <artifactId>bmc-quarkus-parent-extensions</artifactId>
+    <version>bmc-local</version>
+    <packaging>pom</packaging>
+
+    <name>BMC - Quarkus Parent Extensions POM</name>
+    <description>BMC - BOM and Build System for Quarkus Extension projects</description>
+    <url>https://www.bmc-anvil.com/</url>
+
+    <properties>
+        <!-- Keep properties in alphabetical order  -->
+        <!-- GitHub Repositories Config-->
+        <github.repository>${project.groupId}.${project.artifactId}</github.repository>
+
+        <!-- Quarkus Config and Versions -->
+        <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
+        <quarkus.platform.version>3.25.2</quarkus.platform.version>
+
+        <!-- Versions -->
+        <lombok.version>1.18.38</lombok.version>
+    </properties>
+
+    <!--
+        DependencyManagement section is the dependencies' alignment for this project's children and aren't necessarily automatically
+        imported on the children's poms.
+    -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Bill of Materials -->
+            <dependency>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Libraries -->
+            <!-- BuildTime Libraries -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <!-- test dependencies -->
+            <!-- for test dependencies, the scope is "test"-->
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!--
+        The dependencies section is the dependencies' inheritance for this project's children.
+        The dependencies in this section are automatically imported on the children's poms and will be shared by all inheritors.
+        They are used across all projects, don't include one-off requirements.
+    -->
+    <dependencies>
+        <!-- BuildTime Libraries -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!-- Code Infrastructure Dependencies -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-config-yaml</artifactId>
+        </dependency>
+
+        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jacoco</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!--
+            Build pluginManagement section is the build plugins' alignment for this project's children.
+            They aren't necessarily imported nor executed on the children's poms
+        -->
+        <pluginManagement>
+            <plugins>
+                <!-- Quarkus Extension build Plugins -->
+                <plugin>
+                    <groupId>io.quarkus</groupId>
+                    <artifactId>quarkus-extension-maven-plugin</artifactId>
+                    <version>${quarkus.platform.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>extension-descriptor</goal>
+                            </goals>
+                            <configuration>
+                                <deployment>${project.groupId}:${project.artifactId}-deployment:${project.version}</deployment>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <!--
+            Build plugins' section is the build plugins' inheritance for this project's children.
+            The plugins in this section are automatically imported and executed on the inheritors.
+            They are used across all projects, don't include one-off requirements.
+        -->
+        <plugins>
+            <!-- Apache Maven build Plugins Parent Configuration Override for Quarkus Framework -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- without this configuration, Quarkus hot reload and most likely all compilation will fail -->
+                    <annotationProcessorPaths>
+                        <!-- quarkus-extension-processor: Used by Quarkus extensions -->
+                        <path>
+                            <groupId>io.quarkus</groupId>
+                            <artifactId>quarkus-extension-processor</artifactId>
+                            <version>${quarkus.platform.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
