@@ -6,7 +6,7 @@
     <parent>
         <groupId>bmc.dev.templates.maven</groupId>
         <artifactId>bmc-parent</artifactId>
-        <version>0.1.0</version>
+        <version>1.4.8</version>
     </parent>
 
     <artifactId>bmc-quarkus-parent-extensions</artifactId>
@@ -25,11 +25,11 @@
         <!-- Quarkus Config and Versions -->
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.26.1</quarkus.platform.version>
+        <quarkus.platform.version>3.32.2</quarkus.platform.version>
 
         <!-- Versions -->
         <lombok.version>1.18.42</lombok.version>
-        <mockito.bom.version>5.20.0</mockito.bom.version>
+        <mockito.bom.version>5.22.0</mockito.bom.version>
     </properties>
 
     <!--
@@ -96,7 +96,7 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-junit5</artifactId>
+            <artifactId>quarkus-junit</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
